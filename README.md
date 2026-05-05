@@ -1,4 +1,4 @@
-# 🏨 AGENDAQUI - Sistema de Gestión Hotelera
+# 🏨 AgendaAqui- Sistema de Gestión Hotelera
 
 Sistema POS especializado para hoteles, hostales y alojamientos turísticos. Incluye gestión de habitaciones, reservas, check-in/check-out, huéspedes y facturación integrada.
 
