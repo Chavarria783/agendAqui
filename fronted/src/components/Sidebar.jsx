@@ -111,8 +111,6 @@ const Sidebar = () => {
     //   ],
     // },
     // { title: 'Facturación', icon: FileText, path: '/facturacion' },
-    // { title: 'Impresoras', icon: Printer, path: '/impresoras' },
-    // { title: 'Reportes', icon: BarChart3, path: '/reportes' },
     // { title: 'Configuración', icon: Settings, path: '/configuracion' },
   ];
 

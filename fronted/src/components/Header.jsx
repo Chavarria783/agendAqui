@@ -133,8 +133,6 @@ const Header = () => {
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
 
-          {/* FactuBox removido para proyecto universitario */}
-
           {!loading && user && (
             <div className="header__user">
               <button

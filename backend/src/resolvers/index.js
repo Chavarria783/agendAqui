@@ -10,10 +10,8 @@ const consumosResolvers = require('./consumos');
 const categoriasResolvers = require('./categorias');
 const itemsResolvers = require('./items');
 const tiposDocumentoDianResolvers = require('./tiposDocumentoDian');
-const reportesResolvers = require('./reportes');
 const configuracionResolvers = require('./configuracion');
 const facturacionResolvers = require('./facturacion');
-// const factuboxResolvers = require('./factubox'); // Removido - proyecto universitario
 const { consecutivosResolvers } = require('./consecutivos');
 
 // Sistema POS
@@ -26,12 +24,6 @@ const calendarioResolvers = require('./calendario');
 
 // Sistema de Permisos
 const permisosResolvers = require('./permisos');
-
-// Sistema de Licencias - Removido para proyecto universitario
-// const licenciaResolvers = require('./licencia');
-
-// Sistema de Impresoras
-const impresorasResolvers = require('./impresoras');
 
 // TRA - Tarjeta de Registro de Alojamiento (MinCIT)
 const traResolvers = require('./tra');
@@ -71,17 +63,11 @@ const resolvers = {
     // Tipos de Documento DIAN queries
     ...tiposDocumentoDianResolvers.Query,
 
-    // Reportes queries
-    ...reportesResolvers.Query,
-
     // Configuración queries
     ...configuracionResolvers.Query,
 
     // Facturación Electrónica queries
     ...facturacionResolvers.Query,
-
-    // FactuBox queries - Removido
-    // ...factuboxResolvers.Query,
 
     // Facturas (historial)
     facturas: async (_, { fecha_desde, fecha_hasta, busqueda, tipo_factura, limite }, { pool, user }) => {
@@ -175,12 +161,6 @@ const resolvers = {
     // Sistema de Permisos queries
     ...permisosResolvers.Query,
 
-    // Sistema de Licencias queries - Removido
-    // ...licenciaResolvers.Query,
-
-    // Sistema de Impresoras queries
-    ...impresorasResolvers.Query,
-
     // TRA - Tarjeta de Registro de Alojamiento queries
     ...traResolvers.Query,
 
@@ -240,9 +220,6 @@ const resolvers = {
     // Facturación Electrónica mutations
     ...facturacionResolvers.Mutation,
 
-    // FactuBox mutations - Removido
-    // ...factuboxResolvers.Mutation,
-
     // Sistema POS mutations
     ...cajaResolvers.Mutation,
     ...descuentosResolvers.Mutation,
@@ -253,12 +230,6 @@ const resolvers = {
 
     // Sistema de Permisos mutations
     ...permisosResolvers.Mutation,
-
-    // Sistema de Licencias mutations - Removido
-    // ...licenciaResolvers.Mutation,
-
-    // Sistema de Impresoras mutations
-    ...impresorasResolvers.Mutation,
 
     // TRA - Tarjeta de Registro de Alojamiento mutations
     ...traResolvers.Mutation,
