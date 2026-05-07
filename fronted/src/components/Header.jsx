@@ -125,7 +125,7 @@ const Header = () => {
         {/* Usuario y Acciones */}
         <div className="header__actions">
           {/* Theme Toggle Button */}
-          <button
+          <button hidden={true} style={{ display: 'none' }}
             onClick={toggleTheme}
             className="header__theme-toggle"
             title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}

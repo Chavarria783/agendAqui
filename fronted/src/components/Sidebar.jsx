@@ -227,7 +227,7 @@ const Sidebar = () => {
         {/* Sección inferior: tema + usuario */}
         <div className="sidebar__footer">
           {/* Toggle de tema */}
-          <button
+          <button hidden={true} style={{ display: 'none' }}
             className="sidebar__theme-toggle"
             onClick={toggleTheme}
             data-tooltip={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
