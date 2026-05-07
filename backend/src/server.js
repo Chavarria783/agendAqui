@@ -11,7 +11,6 @@ require('dotenv').config();
 const typeDefs = require('./schema/typeDefs');
 const resolvers = require('./resolvers');
 const pool = require('./config/database');
-const colaImpresionRoutes = require('./routes/cola-impresion');
 
 const PORT = process.env.PORT || 4005;
 
@@ -303,16 +302,12 @@ async function startServer() {
     }
   });
 
-  // Rutas de Cola de Impresión (REST para el agente)
-  app.use('/api/cola', colaImpresionRoutes);
-
   // Ruta raíz
   app.get('/', (req, res) => {
     res.json({
       message: 'Factufy Hotel API',
       graphql: '/graphql',
-      health: '/health',
-      colaImpresion: '/api/cola'
+      health: '/health'
     });
   });
 

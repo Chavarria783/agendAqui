@@ -291,56 +291,6 @@ const typeDefs = gql`
     cufe: String
   }
 
-  # Resultado de agregar a cola de impresión térmica
-  type ResultadoImpresion {
-    success: Boolean!
-    message: String
-    trabajo_id: Int
-  }
-
-  # ============================================================================
-  # TIPOS DE IMPRESORAS
-  # ============================================================================
-
-  type Impresora {
-    id: ID!
-    nombre: String!
-    tipo: String!
-    nombre_sistema: String
-    descripcion: String
-    activa: Boolean!
-    es_predeterminada: Boolean!
-    ancho_papel: Int
-    created_at: String
-    updated_at: String
-  }
-
-  type ImpresoraSistema {
-    nombre: String!
-    nombre_driver: String
-    estado: String
-  }
-
-  input CrearImpresoraInput {
-    nombre: String!
-    tipo: String!
-    nombre_sistema: String
-    descripcion: String
-    activa: Boolean
-    es_predeterminada: Boolean
-    ancho_papel: Int
-  }
-
-  input ActualizarImpresoraInput {
-    nombre: String
-    tipo: String
-    nombre_sistema: String
-    descripcion: String
-    activa: Boolean
-    es_predeterminada: Boolean
-    ancho_papel: Int
-  }
-
   type FacturaElectronicaCompleta {
     id: Int!
     factura_id: Int!
@@ -2448,67 +2398,6 @@ const typeDefs = gql`
   }
 
   # ============================================================================
-  # SISTEMA DE LICENCIAS
-  # ============================================================================
-
-  type LicenciaSistema {
-    codigo_licencia: String
-    huella_licencia: String
-    tipo_licencia: String
-    tipo_licencia_nombre: String
-    estado_licencia: String!
-    fecha_activacion: String
-    fecha_vencimiento: String
-    dias_gracia: Int!
-    dias_restantes: Int
-    en_gracia: Boolean!
-    permanente: Boolean!
-    # Datos del comercio (desde datos_hotel)
-    nit: String
-    nombre_comercial: String
-    razon_social: String
-    ciudad: String
-    # Estados de acceso
-    activa: Boolean!
-    permitir_acceso: Boolean!
-    mensaje: String
-    mostrar_alerta: Boolean!
-    tipo_alerta: String
-    # Modulos habilitados
-    modulos: [String!]
-    modulos_version: String
-  }
-
-  type ModuloSistema {
-    codigo: String!
-    nombre: String!
-    descripcion: String
-    core: Boolean!
-    ruta: String
-    icono: String
-    habilitado: Boolean!
-  }
-
-  type ResultadoActivacionLicencia {
-    success: Boolean!
-    mensaje: String!
-    licencia: LicenciaSistema
-  }
-
-  input ActivarLicenciaInput {
-    codigo: String!
-    nit: String!
-    nombre_comercial: String!
-    razon_social: String!
-    ciudad: String
-    huella: String!
-    fecha_vencimiento: String
-    tipo_licencia: String!
-    modulos: [String!]
-    modulos_version: String
-  }
-
-  # ============================================================================
   # QUERIES
   # ============================================================================
 
@@ -2633,22 +2522,6 @@ const typeDefs = gql`
     # Movimientos de inventario
     movimientosInventario(item_inventario_id: Int, tipo_movimiento: TipoMovimiento, fecha_desde: Date, fecha_hasta: Date): [MovimientoInventario!]!
 
-    # Reportes
-    reporteOcupacion(fecha_desde: Date!, fecha_hasta: Date!): ReporteOcupacion!
-    reporteIngresos(fecha_desde: Date!, fecha_hasta: Date!): ReporteIngresos!
-    reporteHuespedes(fecha_desde: Date!, fecha_hasta: Date!): ReporteHuespedes!
-    reporteReservas(fecha_desde: Date!, fecha_hasta: Date!): ReporteReservas!
-    reporteInventario(fecha_desde: Date!, fecha_hasta: Date!): ReporteInventario!
-    reporteMetodosPago(fecha_desde: Date!, fecha_hasta: Date!): ReporteMetodosPago!
-    reporteCierreCaja(fecha: Date!): ReporteCierreCaja!
-    reporteADRRevPAR(fecha_desde: Date!, fecha_hasta: Date!): ReporteADRRevPAR!
-    reporteComparativo(fecha_desde_actual: Date!, fecha_hasta_actual: Date!, fecha_desde_anterior: Date!, fecha_hasta_anterior: Date!): ReporteComparativo!
-    reporteFuentesReserva(fecha_desde: Date!, fecha_hasta: Date!): ReporteFuentesReserva!
-    reporteCancelaciones(fecha_desde: Date!, fecha_hasta: Date!): ReporteCancelaciones!
-    reporteLibroVentas(fecha_desde: Date!, fecha_hasta: Date!): ReporteLibroVentas!
-    reporteIVA(fechaDesde: String!, fechaHasta: String!): ReporteIVA!
-    reporteICA(fechaDesde: String!, fechaHasta: String!): ReporteICA!
-
     # Configuración
     datosHotel: DatosHotel
     parametrosGenerales: ParametrosGenerales
@@ -2729,22 +2602,6 @@ const typeDefs = gql`
     permisosRolAgrupados(rol: RolUsuario!): [PermisosPorModulo!]!
     permisosUsuarioAgrupados(usuario_id: Int!): [PermisosPorModulo!]!
     tienePermiso(codigo: String!): Boolean!
-
-    # ============================================================================
-    # QUERIES SISTEMA DE LICENCIAS
-    # ============================================================================
-    licenciaSistema: LicenciaSistema!
-    modulosDisponibles: [ModuloSistema!]!
-
-    # ============================================================================
-    # QUERIES SISTEMA DE IMPRESORAS
-    # ============================================================================
-    impresoras: [Impresora!]!
-    impresora(id: Int!): Impresora
-    impresorasActivas: [Impresora!]!
-    impresorasPorTipo(tipo: String!): [Impresora!]!
-    impresoraPredeterminada(tipo: String!): Impresora
-    impresorasDelSistema: [ImpresoraSistema!]!
 
     # ============================================================================
     # QUERIES TRA (Tarjeta de Registro de Alojamiento - MinCIT)
@@ -2853,9 +2710,6 @@ const typeDefs = gql`
     reimprimirFactura(factura_electronica_id: Int!): RespuestaReimpresion!
     transmitirFacturasLote(factura_electronica_ids: [Int!]!): [RespuestaTransmisionLote!]!
 
-    # Impresión Térmica - Cola de Impresión
-    imprimirFacturaTermica(factura_id: Int!): ResultadoImpresion!
-
     # FactuBox - Notas de Crédito
     crearNotaCreditoFactuBox(input: CrearNotaCreditoFactuBoxInput!): RespuestaTransmisionNC!
     transmitirNotaCredito(nota_credito_id: Int!): RespuestaTransmisionNC!
@@ -2891,19 +2745,6 @@ const typeDefs = gql`
     asignarPermisosRol(rol: RolUsuario!, permisos_ids: [Int!]!): Boolean!
     asignarPermisoUsuario(usuario_id: Int!, permiso_id: Int!, tipo_asignacion: TipoAsignacionPermiso!, motivo: String): Boolean!
     quitarPermisoUsuario(usuario_id: Int!, permiso_id: Int!): Boolean!
-
-    # ============================================================================
-    # MUTATIONS SISTEMA DE LICENCIAS
-    # ============================================================================
-    activarLicenciaSistema(input: ActivarLicenciaInput!): ResultadoActivacionLicencia!
-
-    # ============================================================================
-    # MUTATIONS SISTEMA DE IMPRESORAS
-    # ============================================================================
-    crearImpresora(input: CrearImpresoraInput!): Impresora!
-    actualizarImpresora(id: Int!, input: ActualizarImpresoraInput!): Impresora!
-    eliminarImpresora(id: Int!): Boolean!
-    establecerImpresoraPredeterminada(id: Int!): Impresora!
 
     # ============================================================================
     # MUTATIONS TRA (Tarjeta de Registro de Alojamiento - MinCIT)

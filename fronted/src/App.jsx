@@ -20,17 +20,6 @@ import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
-// Páginas ocultas (no eliminadas, solo sin ruta activa)
-// import ServiciosPage from './pages/ServiciosPage';
-// import ProductosPage from './pages/ProductosPage';
-// import Reportes from './pages/Reportes';
-// import Impresoras from './pages/Impresoras';
-
-// Páginas eliminadas (Factus / Licencias)
-// import FactuBox from './pages/FactuBox';
-// import MiLicencia from './pages/MiLicencia';
-// import Activacion from './pages/Activacion';
-
 function AppContent() {
   return (
     <Router>
@@ -61,12 +50,6 @@ function AppContent() {
                 </PrivateRoute>
               }
             /> */}
-
-            {/* Rutas ocultas (descomentar si se necesitan) */}
-            {/* <Route path="servicios" element={<ServiciosPage />} /> */}
-            {/* <Route path="productos" element={<ProductosPage />} /> */}
-            {/* <Route path="reportes" element={<Reportes />} /> */}
-            {/* <Route path="impresoras" element={<Impresoras />} /> */}
           </Route>
         </Route>
       </Routes>

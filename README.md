@@ -2,6 +2,16 @@
 
 Sistema POS especializado para hoteles, hostales y alojamientos turísticos. Incluye gestión de habitaciones, reservas, check-in/check-out, huéspedes y facturación integrada.
 
+## 🚦 Estado del proyecto
+
+**Sprint 1 (entregado)** — rutas activas en `App.jsx`:
+- 🔐 **Login** (HU-001 a HU-003): autenticación, persistencia de sesión, protección de rutas.
+- 📊 **Dashboard** (HU-004 a HU-007): estadísticas de habitaciones, ocupación, acciones rápidas, polling 30s.
+- 🛏️ **Habitaciones** (HU-008 a HU-012): cuadrícula visual, filtros, CRUD admin, marcar limpia, modal de detalle.
+
+**Sprint 2 (en desarrollo, código presente, rutas pendientes de habilitar)** — los componentes y resolvers existen pero las rutas están comentadas en `App.jsx` hasta que se presenten:
+- Reservas, Check-In/Hospedajes, Huéspedes, Clientes, POS, Caja, Facturación electrónica (DIAN/Factus), TRA (MinCIT Resolución 409), Configuración.
+
 ## 📋 Tabla de Contenidos
 
 - [Características](#características)
@@ -100,7 +110,7 @@ cp .env.example .env
 Editar `.env` con tus credenciales:
 
 ```env
-PORT=4003
+PORT=4005
 NODE_ENV=development
 
 DB_HOST=localhost
@@ -115,8 +125,8 @@ JWT_SECRET=tu_clave_secreta_aqui
 ### 5. Instalar dependencias del Frontend
 
 ```bash
-cd ../frontend
-npm install
+cd ../fronted
+pnpm install
 ```
 
 ### 6. Configurar variables de entorno del Frontend
@@ -129,7 +139,7 @@ cp .env.example .env
 El archivo `.env` debe contener:
 
 ```env
-VITE_API_URL=http://localhost:4003/graphql
+VITE_API_URL=http://localhost:4005/graphql
 VITE_APP_NAME=Factufy Hotel
 ```
 
@@ -143,18 +153,18 @@ npm run dev
 ```
 
 El servidor estará disponible en:
-- API: http://localhost:4003
-- GraphQL Playground: http://localhost:4003/graphql
-- Health Check: http://localhost:4003/health
+- API: http://localhost:4005
+- GraphQL Playground: http://localhost:4005/graphql
+- Health Check: http://localhost:4005/health
 
 ### Iniciar el Frontend
 
 ```bash
-cd frontend
-npm run dev
+cd fronted
+pnpm run dev
 ```
 
-La aplicación estará disponible en: http://localhost:3003
+La aplicación estará disponible en: http://localhost:3005
 
 ### Credenciales de Prueba
 
@@ -181,7 +191,7 @@ Factufy/
 │   ├── package.json
 │   └── .env
 │
-├── frontend/
+├── fronted/
 │   ├── src/
 │   │   ├── assets/                  # Imágenes y recursos
 │   │   ├── components/              # Componentes React
@@ -191,6 +201,7 @@ Factufy/
 │   │   │   └── Habitaciones.jsx
 │   │   ├── graphql/                 # Queries y Mutations
 │   │   ├── hooks/                   # Custom hooks
+│   │   ├── contexts/                # React contexts (Theme, Notifications)
 │   │   ├── utils/                   # Utilidades
 │   │   ├── config/
 │   │   │   └── hotel.config.js      # Configuración de tema
@@ -201,7 +212,6 @@ Factufy/
 │   ├── package.json
 │   └── .env
 │
-├── CLAUDE.md                        # Guía para desarrollo
 └── README.md                        # Este archivo
 ```
 
@@ -329,18 +339,6 @@ Estados de habitación:
 - 🟡 **Limpieza**: Amarillo (#f59e0b)
 - ⚪ **Mantenimiento**: Gris (#6b7280)
 - 🔵 **Reservada**: Azul (#3b82f6)
-
-## 📝 Próximos Pasos
-
-Para continuar el desarrollo:
-
-1. ✅ Implementar resolvers completos de GraphQL
-2. ✅ Crear componentes de gestión de habitaciones
-3. ✅ Implementar sistema de reservas
-4. ✅ Desarrollar flujo de check-in/check-out
-5. ✅ Añadir gestión de consumos
-6. ✅ Implementar generación de facturas
-7. ✅ Crear reportes y estadísticas
 
 ## 🤝 Contribución
 
