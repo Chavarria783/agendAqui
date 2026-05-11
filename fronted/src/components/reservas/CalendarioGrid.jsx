@@ -278,7 +278,8 @@ function CalendarioGrid({ onSelectionComplete, eventos = [], onReservaClick, onH
           <button onClick={() => cambiarSemana(1)} className="nav-btn">Siguiente →</button>
         </div>
 
-        <div className="calendario-zoom">
+        {/* SIMPLIFICADO Sprint 2: Filtro de habitación y selector de días ocultados */}
+        {/* <div className="calendario-zoom">
           <label>Habitación:</label>
           <select value={habitacionFiltro} onChange={(e) => setHabitacionFiltro(e.target.value)}>
             <option value="">Todas las habitaciones</option>
@@ -287,7 +288,6 @@ function CalendarioGrid({ onSelectionComplete, eventos = [], onReservaClick, onH
             ))}
           </select>
         </div>
-
         <div className="calendario-zoom">
           <label>Días visibles:</label>
           <select value={diasVisible} onChange={(e) => setDiasVisible(parseInt(e.target.value))}>
@@ -296,7 +296,7 @@ function CalendarioGrid({ onSelectionComplete, eventos = [], onReservaClick, onH
             <option value="21">21 días</option>
             <option value="30">30 días</option>
           </select>
-        </div>
+        </div> */}
 
         {seleccion.length > 0 && (
           <div className="calendario-seleccion-info">
@@ -396,7 +396,7 @@ function CalendarioGrid({ onSelectionComplete, eventos = [], onReservaClick, onH
 
       {/* Ayuda */}
       <div className="calendario-ayuda">
-        <p><strong>Tip:</strong> Click y arrastra para seleccionar múltiples noches. Mantén Ctrl para seleccionar múltiples habitaciones.</p>
+        <p><strong>Tip:</strong> Click y arrastra para seleccionar múltiples noches. Click en una celda con reserva para ver los detalles.</p>
       </div>
 
       {/* Modal de error */}

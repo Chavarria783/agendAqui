@@ -9,6 +9,11 @@ import './SeleccionMetodosPago.css';
 function SeleccionMetodosPago({ totalAPagar, metodosSeleccionados, onMetodosChange }) {
   const [metodos, setMetodos] = useState(metodosSeleccionados || []);
 
+  // Sincronizar cuando el padre resetea los métodos
+  useEffect(() => {
+    setMetodos(metodosSeleccionados || []);
+  }, [metodosSeleccionados]);
+
   // Función helper para obtener el ícono apropiado con fallback híbrido
   const getPaymentIcon = (metodoPago) => {
     if (!metodoPago) return <DollarSign size={16} />;
@@ -38,7 +43,7 @@ function SeleccionMetodosPago({ totalAPagar, metodosSeleccionados, onMetodosChan
     if (onMetodosChange) {
       onMetodosChange(metodos);
     }
-  }, [metodos]);
+  }, [metodos, onMetodosChange]);
 
   const agregarMetodo = () => {
     const nuevoMetodo = {

@@ -128,9 +128,9 @@ export default function Login() {
         <div className="login-card">
           <div className="login-header">
             <div className="logo-login">
-              <img src={Logo} alt="Factufy Hotel Logo" className="login-logo-image" />
+              <img src={Logo} alt="AgendAqui Hotel Logo" className="login-logo-image" />
             </div>
-            <h2>Factufy Hotel</h2>
+            <h2>AgendAqui Hotel</h2>
             <p>Sistema de Gestión Hotelera</p>
           </div>
 

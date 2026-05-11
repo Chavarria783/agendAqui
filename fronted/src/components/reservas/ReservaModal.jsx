@@ -10,7 +10,7 @@ import Button from '../shared/Button';
 import Input from '../shared/Input';
 import Select from '../shared/Select';
 import SuccessModal from '../shared/SuccessModal';
-import { User, Search, X, Plus, DollarSign, FileText, MapPin } from 'lucide-react';
+import { User, Search, X, Plus, DollarSign, FileText } from 'lucide-react';
 import './ReservaModal.css';
 
 function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
@@ -90,8 +90,8 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
     skip: !modoManual // Solo cargar si está en modo manual
   });
 
-  // Query para obtener municipios DANE
-  const { data: municipiosData, loading: loadingMunicipios } = useQuery(GET_MUNICIPIOS_DANE);
+  // SIMPLIFICADO Sprint 2: Query de municipios DANE deshabilitada
+  const { data: municipiosData, loading: loadingMunicipios } = useQuery(GET_MUNICIPIOS_DANE, { skip: true });
   const municipios = municipiosData?.municipiosDane || [];
 
   const habitacionesDisponibles = habitacionesData?.habitaciones || [];
@@ -311,14 +311,11 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
       }
     }
 
-    // Validar municipio antes de crear cliente
-    if (formData.nuevo_cliente && !formData.cliente_nuevo.codigo_municipio) {
-      setErrorModal({
-        isOpen: true,
-        message: 'El municipio DANE es obligatorio para crear un cliente'
-      });
-      return;
-    }
+    /* SIMPLIFICADO Sprint 2: Validación de municipio DANE deshabilitada */
+    // if (formData.nuevo_cliente && !formData.cliente_nuevo.codigo_municipio) {
+    //   setErrorModal({ isOpen: true, message: 'El municipio DANE es obligatorio para crear un cliente' });
+    //   return;
+    // }
 
     try {
       let clienteId = parseInt(formData.cliente_id);
@@ -413,7 +410,7 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
               num_adultos: formData.num_adultos,
               num_ninos: formData.num_ninos,
               canal: formData.canal_reserva,
-              observaciones: `${formData.observaciones}\nProcedencia: ${formData.procedencia}\nDestino: ${formData.destino}\nMotivo: ${formData.motivo_viaje}`.trim(),
+              observaciones: formData.observaciones || undefined,
               anticipo: parseFloat(formData.anticipo) || 0
             }
           }
@@ -447,7 +444,7 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
                 num_ninos: formData.num_ninos,
                 canal: formData.canal_reserva,
                 precio_noche: precioNoche,
-                observaciones: `${formData.observaciones}\nProcedencia: ${formData.procedencia}\nDestino: ${formData.destino}\nMotivo: ${formData.motivo_viaje}`.trim(),
+                observaciones: formData.observaciones || undefined,
                 anticipo: Math.round(anticipoProporcional)
               }
             }
@@ -587,7 +584,8 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
               ]}
             />
 
-            <Select
+            {/* SIMPLIFICADO Sprint 2: Canal de reserva ocultado */}
+            {/* <Select
               label="Canal"
               name="canal_reserva"
               value={formData.canal_reserva}
@@ -601,7 +599,7 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
                 { value: 'expedia', label: 'Expedia' },
                 { value: 'walk_in', label: 'Walk-in' }
               ]}
-            />
+            /> */}
           </div>
         </div>
 
@@ -766,122 +764,27 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
                 />
               </div>
 
-              {/* Selector de Municipio DANE */}
-              <div className="form-group" style={{marginBottom: '1rem'}}>
-                <label htmlFor="municipio-reserva">
-                  Municipio (Código DANE) <span style={{color: 'red'}}>*</span>
-                </label>
-                <div style={{position: 'relative'}}>
-                  <input
-                    type="text"
-                    id="municipio-reserva"
-                    value={
-                      busquedaMunicipio ||
-                      (municipioSeleccionado
-                        ? `${municipioSeleccionado.nombre} - ${municipioSeleccionado.departamento}`
-                        : ''
-                      )
-                    }
-                    onChange={(e) => {
-                      setBusquedaMunicipio(e.target.value);
-                      setMostrarMunicipios(true);
-                    }}
-                    onFocus={() => setMostrarMunicipios(true)}
-                    placeholder="Buscar municipio..."
-                    style={{width: '100%', padding: '8px', border: '1px solid #ddd', borderRadius: '4px'}}
-                  />
-                  {municipioSeleccionado && !busquedaMunicipio && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData(prev => ({
-                          ...prev,
-                          cliente_nuevo: { ...prev.cliente_nuevo, codigo_municipio: null }
-                        }));
-                        setBusquedaMunicipio('');
-                      }}
-                      style={{
-                        position: 'absolute', right: '8px', top: '50%', transform: 'translateY(-50%)',
-                        background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px'
-                      }}
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
-                </div>
-                {mostrarMunicipios && busquedaMunicipio && (
-                  <div style={{
-                    position: 'absolute', zIndex: 1000, backgroundColor: 'white', border: '1px solid #ddd',
-                    borderRadius: '4px', maxHeight: '200px', overflowY: 'auto', width: '100%',
-                    marginTop: '4px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                  }}>
-                    {loadingMunicipios ? (
-                      <div style={{padding: '8px', textAlign: 'center'}}>Cargando...</div>
-                    ) : municipiosFiltrados.length === 0 ? (
-                      <div style={{padding: '8px', textAlign: 'center', color: '#666'}}>No se encontraron municipios</div>
-                    ) : (
-                      municipiosFiltrados.map((mun) => (
-                        <button
-                          key={mun.codigo}
-                          type="button"
-                          onClick={() => handleSeleccionarMunicipio(mun)}
-                          style={{
-                            width: '100%', padding: '8px 12px', textAlign: 'left', border: 'none',
-                            background: 'transparent', cursor: 'pointer', borderBottom: '1px solid #f0f0f0'
-                          }}
-                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
-                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                        >
-                          <div style={{fontWeight: '500'}}>{mun.nombre} - {mun.departamento}</div>
-                          <div style={{fontSize: '12px', color: '#666'}}>Código: {mun.codigo}</div>
-                        </button>
-                      ))
-                    )}
-                  </div>
-                )}
-                {formData.cliente_nuevo.codigo_municipio && (
-                  <small style={{display: 'block', marginTop: '4px', color: '#666', fontSize: '12px'}}>
-                    Código DANE: {formData.cliente_nuevo.codigo_municipio}
-                  </small>
-                )}
-              </div>
+              {/* SIMPLIFICADO Sprint 2: Selector de Municipio DANE ocultado */}
+              {/* <div className="form-group" style={{marginBottom: '1rem'}}>
+                <label htmlFor="municipio-reserva">Municipio (Código DANE) <span style={{color: 'red'}}>*</span></label>
+                ... selector de municipios DANE ...
+              </div> */}
             </div>
           )}
         </div>
 
-        {/* BLOQUE 3: Procedencia y Destino */}
-        <div className="bloque-procedencia">
+        {/* SIMPLIFICADO Sprint 2: Bloque de Procedencia y Destino ocultado */}
+        {/* <div className="bloque-procedencia">
           <h3 className="bloque-title">
             <MapPin size={18} />
             Procedencia y Destino
           </h3>
-
           <div className="form-row">
-            <Input
-              label="Procedencia"
-              name="procedencia"
-              value={formData.procedencia}
-              onChange={handleInputChange}
-              placeholder="Colombia"
-            />
-
-            <Input
-              label="Destino"
-              name="destino"
-              value={formData.destino}
-              onChange={handleInputChange}
-              placeholder="Colombia"
-            />
-
-            <Input
-              label="Motivo de Viaje"
-              name="motivo_viaje"
-              value={formData.motivo_viaje}
-              onChange={handleInputChange}
-              placeholder="Turismo, Negocios, etc."
-            />
+            <Input label="Procedencia" name="procedencia" value={formData.procedencia} onChange={handleInputChange} placeholder="Colombia" />
+            <Input label="Destino" name="destino" value={formData.destino} onChange={handleInputChange} placeholder="Colombia" />
+            <Input label="Motivo de Viaje" name="motivo_viaje" value={formData.motivo_viaje} onChange={handleInputChange} placeholder="Turismo, Negocios, etc." />
           </div>
-        </div>
+        </div> */}
 
         {/* BLOQUE 4: Tarifas y Cálculos */}
         <div className="bloque-tarifas">
@@ -896,59 +799,29 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
               <span className="calculo-value">{formatPrice(totales.subtotal)}</span>
             </div>
 
-            <div className="form-row descuento-row">
-              <Input
-                type="number"
-                label="Descuento %"
-                value={formData.descuento_porcentaje}
-                onChange={(e) => handleDescuentoChange('porcentaje', e.target.value)}
-                min="0"
-                max="100"
-                step="0.1"
-              />
+            {/* SIMPLIFICADO Sprint 2: Descuento e impuesto ocultados */}
+            {/* <div className="form-row descuento-row">
+              <Input type="number" label="Descuento %" value={formData.descuento_porcentaje} onChange={(e) => handleDescuentoChange('porcentaje', e.target.value)} min="0" max="100" step="0.1" />
               <span className="separator">o</span>
-              <Input
-                type="number"
-                label="Descuento $"
-                value={formData.descuento_monto}
-                onChange={(e) => handleDescuentoChange('monto', e.target.value)}
-                min="0"
-              />
+              <Input type="number" label="Descuento $" value={formData.descuento_monto} onChange={(e) => handleDescuentoChange('monto', e.target.value)} min="0" />
             </div>
-
             {totales.descuento > 0 && (
               <div className="calculo-item descuento">
                 <span className="calculo-label">Descuento:</span>
                 <span className="calculo-value">-{formatPrice(totales.descuento)}</span>
               </div>
             )}
-
             <div className="form-row impuesto-row">
-              <Input
-                type="number"
-                label="Impuesto %"
-                value={formData.impuesto_porcentaje}
-                onChange={(e) => handleImpuestoChange('porcentaje', e.target.value)}
-                min="0"
-                max="100"
-                step="0.1"
-              />
+              <Input type="number" label="Impuesto %" value={formData.impuesto_porcentaje} onChange={(e) => handleImpuestoChange('porcentaje', e.target.value)} min="0" max="100" step="0.1" />
               <span className="separator">o</span>
-              <Input
-                type="number"
-                label="Impuesto $"
-                value={formData.impuesto_monto}
-                onChange={(e) => handleImpuestoChange('monto', e.target.value)}
-                min="0"
-              />
+              <Input type="number" label="Impuesto $" value={formData.impuesto_monto} onChange={(e) => handleImpuestoChange('monto', e.target.value)} min="0" />
             </div>
-
             {totales.impuesto > 0 && (
               <div className="calculo-item impuesto">
                 <span className="calculo-label">Impuestos:</span>
                 <span className="calculo-value">+{formatPrice(totales.impuesto)}</span>
               </div>
-            )}
+            )} */}
 
             <div className="calculo-item total">
               <span className="calculo-label">Total:</span>
@@ -1011,7 +884,12 @@ function ReservaModal({ isOpen, onClose, selectionData = [], onSuccess }) {
             onClick={handleSubmit}
             disabled={creandoReserva || creandoCliente}
           >
-            {creandoReserva || creandoCliente ? 'Creando...' : `Crear ${selectionData.length} Reserva${selectionData.length > 1 ? 's' : ''}`}
+            {creandoReserva || creandoCliente
+              ? 'Creando...'
+              : modoManual
+                ? 'Crear Reserva'
+                : `Crear ${selectionData.length} Reserva${selectionData.length > 1 ? 's' : ''}`
+            }
           </Button>
         </div>
       </div>

@@ -7,9 +7,7 @@ import ReservaBlock from './ReservaBlock';
 import ConfirmModal from '../shared/ConfirmModal';
 import SuccessModal from '../shared/SuccessModal';
 import {
-  ChevronLeft, ChevronRight, Search,
-  ZoomIn, ZoomOut, LayoutGrid, AlignJustify,
-  Rows, CalendarDays
+  ChevronLeft, ChevronRight, CalendarDays
 } from 'lucide-react';
 import './CalendarioTimeline.css';
 
@@ -585,7 +583,8 @@ function CalendarioTimeline({
             </button>
           </div>
 
-          <select
+          {/* SIMPLIFICADO Sprint 2: Filtro de estado ocultado */}
+          {/* <select
             value={filtroEstado}
             onChange={(e) => setFiltroEstado(e.target.value)}
             className="timeline-filter-select"
@@ -596,59 +595,25 @@ function CalendarioTimeline({
             <option value="en_curso">En Curso</option>
             <option value="finalizada">Finalizadas</option>
             <option value="no_show">No Show</option>
-          </select>
+          </select> */}
         </div>
 
         <div className="timeline-toolbar__right">
-          <div className="timeline-toolbar__density">
-            <button
-              className={`timeline-density-btn ${rowDensity === 'compact' ? 'active' : ''}`}
-              onClick={() => setRowDensity('compact')}
-              title="Compacto"
-            >
-              <LayoutGrid size={16} />
-            </button>
-            <button
-              className={`timeline-density-btn ${rowDensity === 'normal' ? 'active' : ''}`}
-              onClick={() => setRowDensity('normal')}
-              title="Normal"
-            >
-              <Rows size={16} />
-            </button>
-            <button
-              className={`timeline-density-btn ${rowDensity === 'expanded' ? 'active' : ''}`}
-              onClick={() => setRowDensity('expanded')}
-              title="Expandido"
-            >
-              <AlignJustify size={16} />
-            </button>
+          {/* SIMPLIFICADO Sprint 2: Controles de densidad, zoom y búsqueda ocultados */}
+          {/* <div className="timeline-toolbar__density">
+            <button className={`timeline-density-btn ${rowDensity === 'compact' ? 'active' : ''}`} onClick={() => setRowDensity('compact')} title="Compacto"><LayoutGrid size={16} /></button>
+            <button className={`timeline-density-btn ${rowDensity === 'normal' ? 'active' : ''}`} onClick={() => setRowDensity('normal')} title="Normal"><Rows size={16} /></button>
+            <button className={`timeline-density-btn ${rowDensity === 'expanded' ? 'active' : ''}`} onClick={() => setRowDensity('expanded')} title="Expandido"><AlignJustify size={16} /></button>
           </div>
-
           <div className="timeline-toolbar__zoom">
             <ZoomOut size={14} />
-            <input
-              type="range"
-              min="40"
-              max="120"
-              step="5"
-              value={zoomLevel}
-              onChange={(e) => setZoomLevel(Number(e.target.value))}
-              className="timeline-zoom-slider"
-              title={`Zoom: ${zoomLevel}px/dia`}
-            />
+            <input type="range" min="40" max="120" step="5" value={zoomLevel} onChange={(e) => setZoomLevel(Number(e.target.value))} className="timeline-zoom-slider" title={`Zoom: ${zoomLevel}px/dia`} />
             <ZoomIn size={14} />
           </div>
-
           <div className="timeline-toolbar__search">
             <Search size={14} />
-            <input
-              type="text"
-              placeholder="Buscar huesped o reserva..."
-              value={busqueda}
-              onChange={(e) => setBusqueda(e.target.value)}
-              className="timeline-search-input"
-            />
-          </div>
+            <input type="text" placeholder="Buscar huesped o reserva..." value={busqueda} onChange={(e) => setBusqueda(e.target.value)} className="timeline-search-input" />
+          </div> */}
 
           {onNuevaReserva && (
             <button className="timeline-toolbar__nueva-btn" onClick={onNuevaReserva}>
@@ -745,7 +710,8 @@ function CalendarioTimeline({
                           rowDensity={rowDensity}
                           isSearchMatch={isSearchMatch}
                           isDragging={isDragging}
-                          onPointerDown={(type, e) => handleDragStart(evento, type, e)}
+                          /* SIMPLIFICADO Sprint 2: Drag & drop deshabilitado */
+                          onPointerDown={null}
                           onClick={() => handleBlockClick(evento)}
                           dayWidth={dayWidth}
                           lane={lane}
@@ -759,20 +725,7 @@ function CalendarioTimeline({
               );
             })}
 
-            {/* Ghost element */}
-            {dragState && ghostPos && (
-              <div
-                className={`timeline-ghost ${ghostPos.valid ? 'timeline-ghost--valid' : 'timeline-ghost--invalid'}`}
-                style={{
-                  position: 'absolute',
-                  left: ROOM_LABEL_WIDTH + ghostPos.left,
-                  top: ghostPos.top,
-                  width: ghostPos.width,
-                  height: ghostPos.height,
-                  pointerEvents: 'none',
-                }}
-              />
-            )}
+            {/* SIMPLIFICADO Sprint 2: Ghost element de drag deshabilitado */}
           </div>
 
           {/* Today line */}
@@ -809,50 +762,11 @@ function CalendarioTimeline({
           <span>Seleccionada</span>
         </div>
         <div className="timeline-legend__tip">
-          <strong>Tip:</strong> Arrastra un bloque para mover la reserva. Arrastra el borde derecho para extender/acortar. Click en celda vacia + arrastra para crear nueva reserva.
+          <strong>Tip:</strong> Click en celda vacía y arrastra para crear nueva reserva. Click en un bloque para ver los detalles.
         </div>
       </div>
 
-      {/* Confirm change modal */}
-      <ConfirmModal
-        isOpen={!!pendingChange}
-        onClose={() => setPendingChange(null)}
-        onConfirm={ejecutarCambioPendiente}
-        title="Confirmar Cambio de Reserva"
-        confirmText="Aplicar Cambio"
-        cancelText="Cancelar"
-        variant="warning"
-        loading={isUpdating}
-        message={
-          pendingChange && (
-            <div className="timeline-confirm-detail">
-              <p className="timeline-confirm-detail__reserva">
-                <strong>{pendingChange.evento.codigo}</strong>
-                {' — '}
-                {pendingChange.evento.huesped?.nombre_completo || 'Sin huesped'}
-              </p>
-              <ul className="timeline-confirm-detail__cambios">
-                {pendingChange.cambios.map((cambio, i) => (
-                  <li key={i}>{cambio}</li>
-                ))}
-              </ul>
-            </div>
-          )
-        }
-      />
-
-      <SuccessModal
-        isOpen={errorModal.isOpen}
-        onClose={() => setErrorModal({ isOpen: false, message: '' })}
-        type="error"
-        message={errorModal.message}
-      />
-      <SuccessModal
-        isOpen={successModal.isOpen}
-        onClose={() => setSuccessModal({ isOpen: false, message: '' })}
-        type="success"
-        message={successModal.message}
-      />
+      {/* SIMPLIFICADO Sprint 2: Modales de confirmación de drag deshabilitados */}
     </div>
   );
 }
