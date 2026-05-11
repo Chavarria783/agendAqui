@@ -93,8 +93,8 @@ const Sidebar = () => {
   const menuItems = [
     { title: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { title: 'Habitaciones', icon: BedDouble, path: '/habitaciones' },
-    /* TODO Sprint 2: Descomentar cuando se presente el modulo de Reservas */
-    // { title: 'Reservas', icon: CalendarCheck, path: '/reservas' },
+    { title: 'Reservas', icon: CalendarCheck, path: '/reservas' },
+    // Sprint 3: Hospedajes y Check-In
     // { title: 'Hospedajes', icon: ClipboardList, path: '/hospedajes', end: true },
     // { title: 'Check-In', icon: ClipboardCheck, path: '/hospedajes/checkin' },
     // { title: 'Huéspedes', icon: Users, path: '/huespedes' },
@@ -111,6 +111,8 @@ const Sidebar = () => {
     //   ],
     // },
     // { title: 'Facturación', icon: FileText, path: '/facturacion' },
+    // { title: 'Impresoras', icon: Printer, path: '/impresoras' },
+    // { title: 'Reportes', icon: BarChart3, path: '/reportes' },
     // { title: 'Configuración', icon: Settings, path: '/configuracion' },
   ];
 

@@ -8,17 +8,30 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Habitaciones from './pages/Habitaciones';
 import Reservas from './pages/Reservas';
-import Hospedajes from './pages/Hospedajes';
-import CheckIn from './pages/CheckIn';
-import Huespedes from './pages/Huespedes';
-import ClientesPage from './pages/ClientesPage';
-import Configuracion from './pages/Configuracion';
-import POS from './pages/POS';
-import CajaPage from './pages/CajaPage';
-import Facturacion from './pages/Facturacion';
+// Sprint 3: Hospedajes y Check-In
+// import Hospedajes from './pages/Hospedajes';
+// import CheckIn from './pages/CheckIn';
+// Páginas sin ruta activa en Sprint 2 (importaciones diferidas)
+// import Huespedes from './pages/Huespedes';
+// import ClientesPage from './pages/ClientesPage';
+// import Configuracion from './pages/Configuracion';
+// import POS from './pages/POS';
+// import CajaPage from './pages/CajaPage';
+// import Facturacion from './pages/Facturacion';
 import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
+
+// Páginas ocultas (no eliminadas, solo sin ruta activa)
+// import ServiciosPage from './pages/ServiciosPage';
+// import ProductosPage from './pages/ProductosPage';
+// import Reportes from './pages/Reportes';
+// import Impresoras from './pages/Impresoras';
+
+// Páginas eliminadas (Factus / Licencias)
+// import FactuBox from './pages/FactuBox';
+// import MiLicencia from './pages/MiLicencia';
+// import Activacion from './pages/Activacion';
 
 function AppContent() {
   return (
@@ -33,8 +46,8 @@ function AppContent() {
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="habitaciones" element={<Habitaciones />} />
-            {/* TODO Sprint 2: Descomentar cuando se presenten estos modulos */}
-            {/* <Route path="reservas" element={<Reservas />} /> */}
+            <Route path="reservas" element={<Reservas />} />
+            {/* Sprint 3: Hospedajes y Check-In */}
             {/* <Route path="hospedajes" element={<Hospedajes />} /> */}
             {/* <Route path="hospedajes/checkin" element={<CheckIn />} /> */}
             {/* <Route path="huespedes" element={<Huespedes />} /> */}
@@ -50,6 +63,12 @@ function AppContent() {
                 </PrivateRoute>
               }
             /> */}
+
+            {/* Rutas ocultas (descomentar si se necesitan) */}
+            {/* <Route path="servicios" element={<ServiciosPage />} /> */}
+            {/* <Route path="productos" element={<ProductosPage />} /> */}
+            {/* <Route path="reportes" element={<Reportes />} /> */}
+            {/* <Route path="impresoras" element={<Impresoras />} /> */}
           </Route>
         </Route>
       </Routes>

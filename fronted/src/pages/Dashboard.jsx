@@ -136,8 +136,7 @@ function Dashboard() {
               <h3>Habitaciones</h3>
               <p>Gestionar habitaciones</p>
             </button>
-            {/* TODO Sprint 2: Descomentar cuando se presenten Reservas y Check-In */}
-            {/* <button
+            <button
               className="action-card"
               onClick={() => navigate('/reservas')}
             >
@@ -147,7 +146,8 @@ function Dashboard() {
               <h3>Nueva Reserva</h3>
               <p>Crear reservación</p>
             </button>
-            <button
+            {/* Sprint 3: Check-In */}
+            {/* <button
               className="action-card"
               onClick={() => navigate('/hospedajes/checkin')}
             >

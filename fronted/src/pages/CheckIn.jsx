@@ -186,13 +186,13 @@ function CheckIn() {
   };
 
   return (
-    <div className="checkin-container">
+    <div className="checkin-page">
       <div className="page-header">
         <div>
           <h1 className="page-title">Check-In</h1>
           <p className="page-subtitle">Registrar entrada de huéspedes</p>
         </div>
-        <Button variant="outline" onClick={() => navigate('/reservas') /* TODO: Cambiar de vuelta a '/hospedajes' cuando se presente el módulo de Hospedajes */}>
+        <Button variant="outline" onClick={() => navigate('/hospedajes')}>
           Volver a Reservas
         </Button>
       </div>
@@ -405,7 +405,7 @@ function CheckIn() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate('/reservas') /* TODO: Cambiar de vuelta a '/hospedajes' cuando se presente el módulo de Hospedajes */}
+            onClick={() => navigate('/hospedajes')}
           >
             Cancelar
           </Button>
@@ -428,7 +428,7 @@ function CheckIn() {
           setSuccessModal({ isOpen: false, message: '' });
           // Solo navegar si fue un check-in exitoso, no para "Huésped encontrado"
           if (esCheckInExitoso) {
-            navigate('/reservas') /* TODO: Cambiar de vuelta a '/hospedajes' cuando se presente el módulo de Hospedajes */;
+            navigate('/hospedajes');
           }
         }}
         type="success"

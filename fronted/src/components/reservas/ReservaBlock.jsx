@@ -32,6 +32,12 @@ function ReservaBlock({
     : (ESTADO_COLORS[evento.estado] || ESTADO_COLORS.pendiente);
 
   const handlePointerDown = (e) => {
+    if (!onPointerDown) {
+      // Drag deshabilitado - tratar como click
+      e.stopPropagation();
+      if (onClick) onClick();
+      return;
+    }
     e.stopPropagation();
     e.preventDefault();
     const rect = e.currentTarget.getBoundingClientRect();
@@ -65,14 +71,14 @@ function ReservaBlock({
         backgroundColor: colors.bg,
         borderLeft: `3px solid ${colors.border}`,
         color: colors.text,
-        cursor: (evento.es_reserva || evento.es_walkIn) ? 'grab' : 'pointer',
+        cursor: 'pointer',
         zIndex: isDragging ? 10 : 2,
         opacity: isDragging ? 0.4 : 1,
       }}
       onPointerDown={(evento.es_reserva || evento.es_walkIn) ? handlePointerDown : undefined}
       onClick={(e) => {
         e.stopPropagation();
-        if (!evento.es_reserva && !evento.es_walkIn) onClick();
+        if (onClick) onClick();
       }}
       title={`${nombreHuesped} — ${evento.codigo}\n${evento.fecha_entrada.split('T')[0]} → ${evento.fecha_salida.split('T')[0]} (${evento.noches} noches)`}
     >
@@ -86,15 +92,7 @@ function ReservaBlock({
         )}
       </div>
 
-      {/* Indicador de pago */}
-      {paymentClass && evento.es_reserva && (
-        <div className={`reserva-block__payment ${paymentClass}`} />
-      )}
-
-      {/* Resize handle */}
-      {evento.es_reserva && (
-        <div className="reserva-block__resize-handle" />
-      )}
+      {/* SIMPLIFICADO Sprint 2: Indicador de pago y resize handle ocultados */}
 
       {/* Walk-in indicator */}
       {evento.es_walkIn && (

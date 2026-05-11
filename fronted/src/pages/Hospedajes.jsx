@@ -5,6 +5,7 @@ import { GET_HOSPEDAJES } from '../graphql/hospedajes';
 import { Search, Filter, LogOut, Plus, Eye, Receipt, ShoppingCart, Hotel } from 'lucide-react';
 import CheckOutModal from '../components/hospedajes/CheckOutModal';
 import HospedajeDetalleModal from '../components/hospedajes/HospedajeDetalleModal';
+import ConfirmModal from '../components/shared/ConfirmModal';
 import Button from '../components/shared/Button';
 import Loading from '../components/shared/Loading';
 import './Hospedajes.css';
@@ -18,6 +19,7 @@ function Hospedajes() {
   });
 
   const [hospedajeSeleccionado, setHospedajeSeleccionado] = useState(null);
+  const [modalConfirmCheckOut, setModalConfirmCheckOut] = useState(false);
   const [modalCheckOutOpen, setModalCheckOutOpen] = useState(false);
   const [modalDetalleOpen, setModalDetalleOpen] = useState(false);
   const [hospedajeDetalleId, setHospedajeDetalleId] = useState(null);
@@ -54,6 +56,11 @@ function Hospedajes() {
 
   const handleCheckOut = (hospedaje) => {
     setHospedajeSeleccionado(hospedaje);
+    setModalConfirmCheckOut(true);
+  };
+
+  const handleConfirmCheckOut = () => {
+    setModalConfirmCheckOut(false);
     setModalCheckOutOpen(true);
   };
 
@@ -309,10 +316,36 @@ function Hospedajes() {
         </div>
       )}
 
+      {/* Modal de Confirmación de Check-Out */}
+      <ConfirmModal
+        isOpen={modalConfirmCheckOut}
+        onClose={() => {
+          setModalConfirmCheckOut(false);
+          setHospedajeSeleccionado(null);
+        }}
+        onConfirm={handleConfirmCheckOut}
+        title="Confirmar Check-Out"
+        message={hospedajeSeleccionado ? (
+          <>
+            ¿Deseas realizar el check-out del hospedaje <strong>{hospedajeSeleccionado.codigo}</strong>?
+            <br /><br />
+            <strong>Habitación:</strong> {hospedajeSeleccionado.habitacion?.numero} - {hospedajeSeleccionado.habitacion?.tipo}
+            <br />
+            <strong>Huésped:</strong> {hospedajeSeleccionado.huesped?.nombre_completo}
+          </>
+        ) : ''}
+        variant="warning"
+        confirmText="Continuar con Check-Out"
+        cancelText="Cancelar"
+      />
+
       {/* Modal de Check-Out */}
       <CheckOutModal
         isOpen={modalCheckOutOpen}
-        onClose={() => setModalCheckOutOpen(false)}
+        onClose={() => {
+          setModalCheckOutOpen(false);
+          setHospedajeSeleccionado(null);
+        }}
         hospedaje={hospedajeSeleccionado}
         onSuccess={handleCheckOutSuccess}
       />
@@ -328,6 +361,7 @@ function Hospedajes() {
         hospedajeId={hospedajeDetalleId}
         onCheckOut={(hospedaje) => {
           setModalDetalleOpen(false);
+          setHospedajeDetalleId(null);
           handleCheckOut(hospedaje);
         }}
       />

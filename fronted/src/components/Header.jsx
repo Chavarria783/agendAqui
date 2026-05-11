@@ -25,8 +25,8 @@ const Header = () => {
   const menuItems = [
     { title: 'DASHBOARD', path: '/dashboard', Icon: LayoutDashboard },
     { title: 'HABITACIONES', path: '/habitaciones', Icon: BedDouble },
-    /* TODO Sprint 2: Descomentar cuando se presenten estos modulos */
-    // { title: 'RESERVAS', path: '/reservas', Icon: CalendarCheck },
+    { title: 'RESERVAS', path: '/reservas', Icon: CalendarCheck },
+    // Sprint 3: Hospedajes
     // { title: 'HOSPEDAJES', path: '/hospedajes', Icon: ClipboardList },
     // { title: 'HUESPEDES', path: '/huespedes', Icon: Users },
     // {
@@ -132,6 +132,8 @@ const Header = () => {
           >
             {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
           </button>
+
+          {/* FactuBox removido para proyecto universitario */}
 
           {!loading && user && (
             <div className="header__user">
