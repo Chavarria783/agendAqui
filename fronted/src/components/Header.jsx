@@ -123,7 +123,16 @@ const Header = () => {
 
         {/* Usuario y Acciones */}
         <div className="header__actions">
+
           {/* Theme Toggle Button - oculto para entrega final */}
+          {/* Theme Toggle Button */}
+          <button hidden={true} style={{ display: 'none' }}
+            onClick={toggleTheme}
+            className="header__theme-toggle"
+            title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
 
           {/* FactuBox removido para proyecto universitario */}
 

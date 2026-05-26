@@ -45,21 +45,21 @@ const LOGIN_MUTATION = gql`
 
 // Iconos flotantes temáticos de hotelería
 const floatingIcons = [
-  { Icon: Hotel, delay: 0, duration: 18, size: 52 },
-  { Icon: Bed, delay: 2, duration: 22, size: 48 },
-  { Icon: BedDouble, delay: 4, duration: 20, size: 50 },
-  { Icon: Key, delay: 1, duration: 21, size: 46 },
-  { Icon: KeyRound, delay: 3, duration: 19, size: 54 },
-  { Icon: DoorOpen, delay: 5, duration: 23, size: 44 },
-  { Icon: Calendar, delay: 2.5, duration: 24, size: 52 },
-  { Icon: CalendarCheck, delay: 4.5, duration: 18, size: 50 },
-  { Icon: Users, delay: 1.5, duration: 22, size: 48 },
-  { Icon: Clock, delay: 3.5, duration: 20, size: 46 },
-  { Icon: Coffee, delay: 6, duration: 21, size: 50 },
-  { Icon: Wifi, delay: 7, duration: 19, size: 52 },
-  { Icon: ConciergeBell, delay: 8, duration: 23, size: 48 },
-  { Icon: Phone, delay: 9, duration: 20, size: 54 },
-  { Icon: MapPin, delay: 10, duration: 22, size: 46 }
+  //{ Icon: Hotel, delay: 0, duration: 18, size: 52 },
+  //{ Icon: Bed, delay: 2, duration: 22, size: 48 },
+  //{ Icon: BedDouble, delay: 4, duration: 20, size: 50 },
+ // { Icon: Key, delay: 1, duration: 21, size: 46 },
+  //{ Icon: KeyRound, delay: 3, duration: 19, size: 54 },
+  //{ Icon: DoorOpen, delay: 5, duration: 23, size: 44 },
+ // { Icon: Calendar, delay: 2.5, duration: 24, size: 52 },
+  //{ Icon: CalendarCheck, delay: 4.5, duration: 18, size: 50 },
+  //{ Icon: Users, delay: 1.5, duration: 22, size: 48 },
+  //{ Icon: Clock, delay: 3.5, duration: 20, size: 46 },
+ // { Icon: Coffee, delay: 6, duration: 21, size: 50 },
+  //{ Icon: Wifi, delay: 7, duration: 19, size: 52 },
+  //{ Icon: ConciergeBell, delay: 8, duration: 23, size: 48 },
+  //{ Icon: Phone, delay: 9, duration: 20, size: 54 },
+ // { Icon: MapPin, delay: 10, duration: 22, size: 46 }
 ];
 
 export default function Login() {

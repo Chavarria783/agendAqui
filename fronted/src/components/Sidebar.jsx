@@ -227,7 +227,22 @@ const Sidebar = () => {
 
         {/* Sección inferior: tema + usuario */}
         <div className="sidebar__footer">
+
           {/* Toggle de tema - oculto para entrega final */}
+
+          {/* Toggle de tema */}
+          <button hidden={true} style={{ display: 'none' }}
+            className="sidebar__theme-toggle"
+            onClick={toggleTheme}
+            data-tooltip={theme === 'light' ? 'Modo oscuro' : 'Modo claro'}
+            title={theme === 'light' ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro'}
+          >
+            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+            {!collapsed && (
+              <span>{theme === 'light' ? 'Modo oscuro' : 'Modo claro'}</span>
+            )}
+          </button>
+
 
           {/* Usuario */}
           {!userLoading && user && (

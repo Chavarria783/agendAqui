@@ -12,6 +12,8 @@ const Select = ({
   disabled = false,
   ...props
 }) => {
+  const hasExplicitEmptyOption = options.some((option) => option.value === '');
+
   return (
     <div className="select-group">
       {label && (
@@ -30,7 +32,7 @@ const Select = ({
         className={`select-group__select ${error ? 'select-group__select--error' : ''}`}
         {...props}
       >
-        <option value="">{placeholder}</option>
+        {placeholder && !hasExplicitEmptyOption && <option value="">{placeholder}</option>}
         {options.map((option) => (
           <option
             key={option.value}
