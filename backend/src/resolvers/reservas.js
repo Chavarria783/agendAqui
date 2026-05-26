@@ -255,6 +255,9 @@ const reservasResolvers = {
       try {
         await client.query('BEGIN');
 
+        // Lock exclusivo por habitación para prevenir race conditions de solapamiento
+        await client.query('SELECT pg_advisory_xact_lock($1)', [input.habitacion_id]);
+
         // 1. Validar que la habitación existe y está activa
         const habitacion = await client.query(
           'SELECT * FROM habitaciones WHERE id = $1 AND activa = true',
@@ -323,8 +326,8 @@ const reservasResolvers = {
         const anticipo = input.anticipo || 0;
 
         // 7. Validar anticipo
-        if (anticipo < 0 || anticipo > precioTotal) {
-          throw new Error('El anticipo debe estar entre 0 y el precio total');
+        if (isNaN(anticipo) || anticipo < 0 || anticipo > precioTotal) {
+          throw new Error('El anticipo debe ser un número entre 0 y el precio total');
         }
 
         const saldoPendiente = precioTotal - anticipo;
@@ -548,10 +551,25 @@ const reservasResolvers = {
 
         const reservaActual = reserva.rows[0];
 
+        // Lock exclusivo por habitación para prevenir race conditions
+        await client.query('SELECT pg_advisory_xact_lock($1)', [reservaActual.habitacion_id]);
+        if (input.habitacion_id && input.habitacion_id !== reservaActual.habitacion_id) {
+          await client.query('SELECT pg_advisory_xact_lock($1)', [input.habitacion_id]);
+        }
+
         // Determinar habitación y fechas
         const habitacionId = input.habitacion_id || reservaActual.habitacion_id;
         const fechaEntrada = input.fecha_entrada || reservaActual.fecha_entrada;
         const fechaSalida = input.fecha_salida || reservaActual.fecha_salida;
+
+        // Validar que la fecha de entrada no sea en el pasado
+        if (input.fecha_entrada) {
+          const hoyStr = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Bogota' });
+          const entradaStr = String(input.fecha_entrada).split('T')[0];
+          if (entradaStr < hoyStr) {
+            throw new Error('La fecha de entrada no puede ser anterior a hoy');
+          }
+        }
 
         // Validar fechas
         if (new Date(fechaSalida) <= new Date(fechaEntrada)) {

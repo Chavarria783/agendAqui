@@ -24,7 +24,14 @@ function Dashboard() {
   });
 
   if (loading) return <Loading fullScreen />;
-  if (error) return <div>Error al cargar estadísticas</div>;
+  if (error) return (
+    <div className="error-container" style={{ padding: '2rem', textAlign: 'center' }}>
+      <p>Error al cargar estadísticas: {error.message}</p>
+      <button onClick={() => window.location.reload()} style={{ marginTop: '1rem', padding: '0.5rem 1rem', cursor: 'pointer' }}>
+        Reintentar
+      </button>
+    </div>
+  );
 
   const stats = data?.estadisticasHabitaciones || {
     total: 0,
@@ -115,7 +122,7 @@ function Dashboard() {
               />
             </div>
             <div className="occupancy-stats">
-              <span className="occupancy-percentage">{stats.porcentaje_ocupacion}%</span>
+              <span className="occupancy-percentage">{Math.round(stats.porcentaje_ocupacion)}%</span>
               <span className="occupancy-text">
                 {stats.ocupadas} de {stats.total} habitaciones ocupadas
               </span>
@@ -146,8 +153,7 @@ function Dashboard() {
               <h3>Nueva Reserva</h3>
               <p>Crear reservación</p>
             </button>
-            {/* Sprint 3: Check-In */}
-            {/* <button
+            <button
               className="action-card"
               onClick={() => navigate('/hospedajes/checkin')}
             >
@@ -156,7 +162,7 @@ function Dashboard() {
               </div>
               <h3>Check-In</h3>
               <p>Registrar ingreso</p>
-            </button> */}
+            </button>
             {/* <button
               className="action-card"
               onClick={() => navigate('/huespedes')}

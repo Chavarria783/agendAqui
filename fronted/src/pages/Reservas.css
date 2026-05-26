@@ -43,9 +43,9 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.875rem;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: var(--hotel-text-secondary);
+  color: #1f2937;
   background: transparent;
   border: none;
   border-radius: 7px;

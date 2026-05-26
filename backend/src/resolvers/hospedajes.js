@@ -280,7 +280,7 @@ const hospedajesResolvers = {
 
         if (input.reserva_id) {
           const reservaResult = await client.query(
-            'SELECT * FROM reservas WHERE id = $1',
+            'SELECT * FROM reservas WHERE id = $1 FOR UPDATE',
             [input.reserva_id]
           );
 
@@ -291,11 +291,11 @@ const hospedajesResolvers = {
           reserva = reservaResult.rows[0];
 
           // Validar que la reserva es para esta habitación y huésped
-          if (reserva.habitacion_id !== input.habitacion_id) {
+          if (parseInt(reserva.habitacion_id) !== parseInt(input.habitacion_id)) {
             throw new Error('La reserva no es para esta habitación');
           }
 
-          if (reserva.huesped_id !== input.huesped_id) {
+          if (parseInt(reserva.huesped_id) !== parseInt(input.huesped_id)) {
             throw new Error('La reserva no es para este huésped');
           }
 
@@ -317,6 +317,10 @@ const hospedajesResolvers = {
         // 4. Calcular noches previstas
         const fechaSalidaPrevista = new Date(input.fecha_salida_prevista);
 
+        if (isNaN(fechaSalidaPrevista.getTime())) {
+          throw new Error('Fecha de salida prevista inválida');
+        }
+
         // VALIDACIÓN CRÍTICA: Validar que check-out > check-in
         if (fechaSalidaPrevista <= fechaEntrada) {
           throw new Error('La fecha de salida debe ser posterior a la fecha de entrada');
@@ -326,11 +330,12 @@ const hospedajesResolvers = {
         );
 
         // 5. Crear hospedaje
+        const precioTotalHospedaje = nochesPrevistas * precioNoche;
         const hospedajeResult = await client.query(
           `INSERT INTO hospedajes (
             codigo, habitacion_id, huesped_id, reserva_id,
             fecha_entrada, fecha_salida_prevista, noches_previstas,
-            precio_noche, monto_anticipo,
+            precio_noche, precio_total_hospedaje, monto_anticipo,
             acompanantes, observaciones,
             estado, created_by
           ) VALUES (
@@ -338,7 +343,7 @@ const hospedajesResolvers = {
               LPAD((SELECT COALESCE(MAX(CAST(SUBSTRING(codigo FROM 15) AS INTEGER)), 0) + 1
                     FROM hospedajes
                     WHERE codigo LIKE 'HOS-' || TO_CHAR(CURRENT_DATE, 'YYYYMMDD') || '-%')::TEXT, 4, '0'),
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 'activo', $11
+            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'activo', $12
           ) RETURNING *`,
           [
             input.habitacion_id,
@@ -348,6 +353,7 @@ const hospedajesResolvers = {
             input.fecha_salida_prevista,
             nochesPrevistas,
             precioNoche,
+            precioTotalHospedaje,
             anticipo,
             JSON.stringify(input.acompanantes || []),
             input.observaciones || null,
@@ -378,8 +384,10 @@ const hospedajesResolvers = {
 
             // Obtener datos del huésped (nombre y apellido separados para API TRA)
             const huespedTRA = await pool.query(
-              `SELECT h.*, CONCAT(h.nombre, ' ', COALESCE(h.apellido, '')) as nombre_completo
-               FROM huespedes h WHERE h.id = $1`,
+              `SELECT h.*, CONCAT(c.nombre, ' ', COALESCE(c.apellido, '')) as nombre_completo
+               FROM huespedes h
+               JOIN clientes c ON c.id = h.cliente_id
+               WHERE h.id = $1`,
               [input.huesped_id]
             );
 
@@ -494,9 +502,9 @@ const hospedajesResolvers = {
       try {
         await client.query('BEGIN');
 
-        // 1. Obtener hospedaje
+        // 1. Obtener hospedaje (FOR UPDATE previene checkout doble concurrente)
         const hospedaje = await client.query(
-          'SELECT * FROM hospedajes WHERE id = $1',
+          'SELECT * FROM hospedajes WHERE id = $1 FOR UPDATE',
           [input.hospedaje_id]
         );
 
@@ -520,7 +528,7 @@ const hospedajesResolvers = {
         // VALIDACIONES DIAN: Verificar que el cliente tenga los campos obligatorios para facturación electrónica
         const clienteResult = await client.query(
           `SELECT c.*,
-                  CONCAT(h.nombre, ' ', COALESCE(h.apellido, '')) as huesped_nombre
+                  CONCAT(c.nombre, ' ', COALESCE(c.apellido, '')) as huesped_nombre
            FROM huespedes h
            JOIN clientes c ON h.cliente_id = c.id
            WHERE h.id = $1`,
@@ -709,8 +717,11 @@ const hospedajesResolvers = {
                 monto: mp.monto
               }));
 
-              // Enviar factura a Factus
-              const respuestaFactus = await FactusService.enviarFacturaHospedaje(
+              // FactusService removido - proyecto universitario
+              if (typeof FactusService === 'undefined') {
+                console.warn('[CheckOut] FactusService no disponible, omitiendo factura electrónica');
+              } else {
+                const respuestaFactus = await FactusService.enviarFacturaHospedaje(
                 hospedajeConHabitacion,
                 factura,
                 consumos.rows,
@@ -907,6 +918,7 @@ const hospedajesResolvers = {
               console.log('[CheckOut] Factura electrónica guardada exitosamente');
               console.log(`[CheckOut] CUFE: ${respuestaFactus.cufe}`);
               console.log(`[CheckOut] PDF: ${billData?.public_url}/pdf`);
+              } // cierre else FactusService
             }
           } else {
             console.log('[CheckOut] Facturación electrónica desactivada, omitiendo envío a Factus');
@@ -1236,11 +1248,17 @@ const hospedajesResolvers = {
           [motivo, id]
         );
 
-        // Liberar habitación
-        await client.query(
-          'UPDATE habitaciones SET estado = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
-          ['disponible', hosp.habitacion_id]
+        // Liberar habitación solo si no hay otros hospedajes activos en ella
+        const otrosActivos = await client.query(
+          'SELECT COUNT(*) FROM hospedajes WHERE habitacion_id = $1 AND estado = $2 AND id != $3',
+          [hosp.habitacion_id, 'activo', id]
         );
+        if (parseInt(otrosActivos.rows[0].count) === 0) {
+          await client.query(
+            'UPDATE habitaciones SET estado = $1, updated_at = CURRENT_TIMESTAMP WHERE id = $2',
+            ['disponible', hosp.habitacion_id]
+          );
+        }
 
         // Si tiene reserva, cancelarla también
         if (hosp.reserva_id) {

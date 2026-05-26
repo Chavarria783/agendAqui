@@ -309,14 +309,14 @@ function Reservas() {
     setReservaSeleccionada(null);
   };
 
-  const handleConfirmarDesdeDetalle = async (reserva) => {
-    await handleConfirmarReserva(reserva.id);
+  const handleConfirmarDesdeDetalle = (reserva) => {
     handleCerrarDetalleModal();
+    handleConfirmarReserva(reserva.id);
   };
 
-  const handleCancelarDesdeDetalle = async (reserva) => {
-    await handleCancelarReserva(reserva.id);
+  const handleCancelarDesdeDetalle = (reserva) => {
     handleCerrarDetalleModal();
+    handleCancelarReserva(reserva.id);
   };
 
   return (
@@ -617,9 +617,8 @@ function Reservas() {
             setSelectionData([]);
           }}
           selectionData={selectionData}
-          onSuccess={() => {
-            refetch();
-            refetchEventos();
+          onSuccess={async () => {
+            await Promise.all([refetch(), refetchEventos()]);
             setShowModal(false);
             setSelectionData([]);
           }}
