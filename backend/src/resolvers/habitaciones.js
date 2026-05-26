@@ -90,22 +90,22 @@ const habitacionesResolvers = {
           SELECT h.*
           FROM habitaciones h
           WHERE h.activa = true
-            AND h.estado IN ('disponible', 'limpieza')
+            AND h.estado != 'mantenimiento'
             AND NOT EXISTS (
-              -- No tiene hospedaje activo
+              -- No tiene hospedaje activo que se solape con las fechas solicitadas
               SELECT 1 FROM hospedajes hosp
               WHERE hosp.habitacion_id = h.id
                 AND hosp.estado = 'activo'
+                AND hosp.fecha_entrada < $2
+                AND hosp.fecha_salida_prevista > $1
             )
             AND NOT EXISTS (
-              -- No tiene reserva confirmada que se solape con las fechas
+              -- No tiene reserva que se solape con las fechas
               SELECT 1 FROM reservas r
               WHERE r.habitacion_id = h.id
-                AND r.estado IN ('pendiente', 'confirmada')
+                AND r.estado IN ('pendiente', 'confirmada', 'en_curso')
                 AND (
-                  (r.fecha_entrada <= $1 AND r.fecha_salida > $1)
-                  OR (r.fecha_entrada < $2 AND r.fecha_salida >= $2)
-                  OR (r.fecha_entrada >= $1 AND r.fecha_salida <= $2)
+                  (r.fecha_entrada < $2 AND r.fecha_salida > $1)
                 )
             )
         `;
@@ -156,7 +156,7 @@ const habitacionesResolvers = {
           limpieza: parseInt(stats.limpieza) || 0,
           mantenimiento: parseInt(stats.mantenimiento) || 0,
           reservadas: parseInt(stats.reservadas) || 0,
-          porcentaje_ocupacion: total > 0 ? ((ocupadas / total) * 100).toFixed(2) : 0,
+          porcentaje_ocupacion: total > 0 ? parseFloat(((ocupadas / total) * 100).toFixed(2)) : 0,
         };
       } catch (error) {
         console.error('Error en estadisticasHabitaciones query:', error);

@@ -292,6 +292,7 @@ function Hospedajes() {
 
                 {hospedaje.estado === 'activo' && (
                   <>
+                    {/* Consumos oculto para la entrega final
                     <Button
                       variant="secondary"
                       size="small"
@@ -299,7 +300,7 @@ function Hospedajes() {
                       onClick={() => handleGestionarConsumos(hospedaje.id)}
                     >
                       Consumos
-                    </Button>
+                    </Button> */}
                     <Button
                       variant="primary"
                       size="small"

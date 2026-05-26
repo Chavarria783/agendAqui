@@ -26,8 +26,7 @@ const Header = () => {
     { title: 'DASHBOARD', path: '/dashboard', Icon: LayoutDashboard },
     { title: 'HABITACIONES', path: '/habitaciones', Icon: BedDouble },
     { title: 'RESERVAS', path: '/reservas', Icon: CalendarCheck },
-    // Sprint 3: Hospedajes
-    // { title: 'HOSPEDAJES', path: '/hospedajes', Icon: ClipboardList },
+    { title: 'HOSPEDAJES', path: '/hospedajes', Icon: ClipboardList },
     // { title: 'HUESPEDES', path: '/huespedes', Icon: Users },
     // {
     //   title: 'POS',
@@ -124,6 +123,8 @@ const Header = () => {
 
         {/* Usuario y Acciones */}
         <div className="header__actions">
+
+          {/* Theme Toggle Button - oculto para entrega final */}
           {/* Theme Toggle Button */}
           <button hidden={true} style={{ display: 'none' }}
             onClick={toggleTheme}

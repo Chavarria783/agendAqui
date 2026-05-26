@@ -94,9 +94,8 @@ const Sidebar = () => {
     { title: 'Dashboard', icon: LayoutDashboard, path: '/dashboard' },
     { title: 'Habitaciones', icon: BedDouble, path: '/habitaciones' },
     { title: 'Reservas', icon: CalendarCheck, path: '/reservas' },
-    // Sprint 3: Hospedajes y Check-In
-    // { title: 'Hospedajes', icon: ClipboardList, path: '/hospedajes', end: true },
-    // { title: 'Check-In', icon: ClipboardCheck, path: '/hospedajes/checkin' },
+    { title: 'Hospedajes', icon: ClipboardList, path: '/hospedajes', end: true },
+    { title: 'Check-In', icon: ClipboardCheck, path: '/hospedajes/checkin' },
     // { title: 'Huéspedes', icon: Users, path: '/huespedes' },
     // { title: 'Clientes', icon: User, path: '/clientes' },
     // { title: 'Servicios', icon: Briefcase, path: '/servicios' },
@@ -228,6 +227,9 @@ const Sidebar = () => {
 
         {/* Sección inferior: tema + usuario */}
         <div className="sidebar__footer">
+
+          {/* Toggle de tema - oculto para entrega final */}
+
           {/* Toggle de tema */}
           <button hidden={true} style={{ display: 'none' }}
             className="sidebar__theme-toggle"
@@ -240,6 +242,7 @@ const Sidebar = () => {
               <span>{theme === 'light' ? 'Modo oscuro' : 'Modo claro'}</span>
             )}
           </button>
+
 
           {/* Usuario */}
           {!userLoading && user && (
